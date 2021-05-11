@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Command CalculateFinishes</Text>
+    <Description>Some description for CalculateFinishes</Description>
+    <Assembly>CalculateFinishes.dll</Assembly>
+    <FullClassName>CalculateFinishes.Command</FullClassName>
+    <ClientId>6acfe199-3348-469b-8458-73a5cc685f4a</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application CalculateFinishes</Name>
+    <Assembly>CalculateFinishes.dll</Assembly>
+    <FullClassName>CalculateFinishes.App</FullClassName>
+    <ClientId>d084219d-ca6b-4c64-8899-65fc0550fe4b</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
