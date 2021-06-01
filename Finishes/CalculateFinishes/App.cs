@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace CalculateFinishes
+namespace CurtainWallScan
 {
     class App : IExternalApplication
     {
