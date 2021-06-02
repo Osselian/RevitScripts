@@ -31,9 +31,12 @@ namespace CurtainWallScan
 
             // Retrieve elements from database
 
-            ElementParameterFilter EP_Filter = CreateElementParameterFilter();
+            BuiltInParameter builtInParameter = BuiltInParameter.VIEW_FAMILY;
+
+            ElementParameterFilter EP_Filter = CreateElementStringParameterFilter(builtInParameter, "Чертежные виды");
 
             FilteredElementCollector col = new FilteredElementCollector(doc);
+
             ICollection<Element> draftingViews = col.WhereElementIsNotElementType().WherePasses(EP_Filter)
                                                .OfClass(typeof(View)).ToElements();
 
@@ -45,21 +48,20 @@ namespace CurtainWallScan
             //    tx.Commit();
             //}
 
-            UserWindow userWindow = new UserWindow(sel, doc); ;
+            UserWindow userWindow = new UserWindow(sel, doc, draftingViews); ;
 
             userWindow.Show();
 
             return Result.Succeeded;
         }
 
-        private static ElementParameterFilter CreateElementParameterFilter()
+        private static ElementParameterFilter CreateElementStringParameterFilter(BuiltInParameter parameter, string ruleValue)
         {
-            BuiltInParameter builtInParameter = BuiltInParameter.VIEW_TYPE;
-            ParameterValueProvider pvp = new ParameterValueProvider(new ElementId((int)builtInParameter));
+            ParameterValueProvider pvp = new ParameterValueProvider(new ElementId((int)parameter));
             FilterStringContains fsc = new FilterStringContains();
-            string ruleValue = "Чертежные виды(Detail)";
             FilterStringRule fRule = new FilterStringRule(pvp, fsc, ruleValue, true);
             ElementParameterFilter EP_Filter = new ElementParameterFilter(fRule);
+
             return EP_Filter;
         }
     }
