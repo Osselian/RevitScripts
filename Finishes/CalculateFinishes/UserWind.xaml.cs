@@ -19,9 +19,13 @@ using Revit.GeometryConversion;
 using DSSurface = Autodesk.DesignScript.Geometry.Surface;
 using DSLine = Autodesk.DesignScript.Geometry.Line;
 using DSCurve = Autodesk.DesignScript.Geometry.Curve;
+using DSPoint = Autodesk.DesignScript.Geometry.Point;
+using DSUV = Autodesk.DesignScript.Geometry.UV;
 using Curve = Autodesk.Revit.DB.Curve;
 using Line = Autodesk.Revit.DB.Line;
 using Point = Autodesk.Revit.DB.Point;
+using UV = Autodesk.Revit.DB.UV;
+using System.Diagnostics;
 
 namespace CurtainWallScan
 {
@@ -61,7 +65,7 @@ namespace CurtainWallScan
             ShowSelectedWalls(_elements);
         }
 
-        private void DrawBtn_Click(object sender, RoutedEventArgs e)
+        private void DrawBtn_Click(object sender, EventArgs e)
         {
             Wall wall = _elements[0] as Wall;
             CurtainGrid curtainGrid = wall.CurtainGrid;
@@ -84,9 +88,14 @@ namespace CurtainWallScan
                 try
                 {
                     CurveArrArray curveArrArray = curtainCell.CurveLoops;
-                    foreach (var curve in curveArrArray)
+                    Debug.Print(curveArrArray.Size.ToString());
+                    foreach (CurveArray curveArray in curveArrArray)
                     {
-                        curves.Add(curve as Curve);
+                        foreach (var curve in curveArray)
+                        {
+                            Debug.Print(curveArray.GetType().Name);
+                            curves.Add(curve as Curve);
+                        }
                     }
                 }
                 catch (Exception)
@@ -94,11 +103,53 @@ namespace CurtainWallScan
                     continue;
                 }
             }
+                    
+            Debug.Print(curves.Count().ToString());
 
+            List<DSUV[]> curvesNormParams = new List<DSUV[]>();
             foreach (var curve in curves)
             {
-                XYZ startPoint = curve.GetEndPoint(0);
+                
+                try
+                {
+                    DSUV[] coords = new DSUV[2];
+                    XYZ xyz = curve.GetEndPoint(0);
+                    Point startPoint = Point.Create(xyz);
+                    DSPoint dsStartPoint = startPoint.ToProtoType();
+                    DSPoint endPoint = Point.Create(curve.GetEndPoint(1)).ToProtoType();
+                    DSUV uV1 = surface.UVParameterAtPoint(dsStartPoint);
+                    DSUV uV2 = surface.UVParameterAtPoint(endPoint);
+                    coords[0] = uV1;
+                    coords[1] = uV2;
+                    curvesNormParams.Add(coords);
+                }
+                catch (Exception)
+                {
+                    
+                    continue;
+                }
+            }
 
+            Debug.Print(curvesNormParams.Count().ToString());
+
+            using (Transaction tx = new Transaction(_doc))
+            {
+                tx.Start("TransactionName");
+                foreach (var coord in curvesNormParams)
+                {
+                    double u1 = coord[0].U;
+                    double u2 = coord[1].U;
+                    double v1 = coord[0].V;
+                    double v2 = coord[1].V;
+
+                    XYZ point1 = new XYZ(vLen * v1, uLen * u1, 0);
+                    XYZ point2 = new XYZ(vLen * v2, uLen * u2, 0);
+
+                    Line baseLine = Line.CreateBound(point1, point2);
+                               
+                    _doc.Create.NewDetailCurve(Views.SelectedItem as View, baseLine);
+                }
+                tx.Commit();
             }
         }
 

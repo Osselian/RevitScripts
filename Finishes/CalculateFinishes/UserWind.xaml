@@ -44,6 +44,7 @@
         <Button x:Name="v"
                 Grid.Row="1"
                 Content="Построить"
-                VerticalAlignment="Bottom"/>
+                VerticalAlignment="Bottom"
+                Click="DrawBtn_Click"/>
     </Grid>
 </Window>
