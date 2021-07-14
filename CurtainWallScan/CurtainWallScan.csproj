@@ -69,6 +69,7 @@
       <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2020\AddIns\DynamoForRevit\Revit\RevitNodes.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -79,9 +80,6 @@
     <Compile Include="UserWind.xaml.cs">
       <DependentUpon>UserWind.xaml</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CalculateFinishes.addin" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="UserWind.xaml">
