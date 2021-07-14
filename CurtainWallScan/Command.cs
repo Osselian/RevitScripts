@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
+
 #endregion
 
 namespace CurtainWallScan
@@ -24,12 +25,7 @@ namespace CurtainWallScan
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
-
-            // Access current selection
-
             Selection sel = uidoc.Selection;
-
-            // Retrieve elements from database
 
             BuiltInParameter builtInParameter = BuiltInParameter.VIEW_FAMILY;
 
@@ -38,24 +34,20 @@ namespace CurtainWallScan
             FilteredElementCollector col = new FilteredElementCollector(doc);
 
             ICollection<Element> draftingViews = col.WhereElementIsNotElementType().WherePasses(EP_Filter)
-                                               .OfClass(typeof(View)).ToElements();
+                                                    .OfClass(typeof(View)).ToElements();
 
-            // Modify document within a transaction
+            using (Transaction tx = new Transaction(doc))
+            {
+                tx.Start("Transaction Name");
+                UserWindow userWindow = new UserWindow(sel, doc, draftingViews);
 
-            //using (Transaction tx = new Transaction(doc))
-            //{
-            //    tx.Start("Transaction Name");
-            //    tx.Commit();
-            //}
-
-            UserWindow userWindow = new UserWindow(sel, doc, draftingViews); ;
-
-            userWindow.Show();
-
+                userWindow.Show();
+                tx.Commit();
+            }
             return Result.Succeeded;
         }
 
-        private static ElementParameterFilter CreateElementStringParameterFilter(BuiltInParameter parameter, string ruleValue)
+        private ElementParameterFilter CreateElementStringParameterFilter(BuiltInParameter parameter, string ruleValue)
         {
             ParameterValueProvider pvp = new ParameterValueProvider(new ElementId((int)parameter));
             FilterStringContains fsc = new FilterStringContains();
