@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Command CurtainWallScan</Text>
+    <Description>Some description for CurtainWallScan</Description>
+    <Assembly>CurtainWallScan.dll</Assembly>
+    <FullClassName>CurtainWallScan.Command</FullClassName>
+    <ClientId>164ee6db-5418-48ba-9b86-ed76bc3f9c85</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application CurtainWallScan</Name>
+    <Assembly>CurtainWallScan.dll</Assembly>
+    <FullClassName>CurtainWallScan.App</FullClassName>
+    <ClientId>bb8716e7-f96f-4c7d-8f68-3795f385a866</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
